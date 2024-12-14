@@ -56,8 +56,14 @@ def calculate_percent_change(old_file, new_file):
         locations='country_code', 
         color='percent_change',
         hover_name='name',
-        color_continuous_scale='RdYlGn',
-        title='Visitor Percent Change by Country',
+        color_continuous_scale=[
+            [0.0, 'yellow'],
+            [0.5, 'white'],
+            [1.0, 'blue']
+        ],
+        title='Country-level Nextclade:Nextstrain Visitor Ratio',
+        color_continuous_midpoint=0,
+        range_color=[-100, 100],
         hover_data={
             'name': True, 
             'visitors_old': ':.0f', 
@@ -72,7 +78,12 @@ def calculate_percent_change(old_file, new_file):
         geo=dict(
             showframe=False,
             showcoastlines=True,
-            projection_type='equirectangular'
+            projection_type='natural earth'
+        ),
+        coloraxis_colorbar=dict(
+            title='',
+            tickvals=[-100, 0, 100],
+            ticktext=['≤1:2', '1:1', '≥2:1']
         )
     )
     

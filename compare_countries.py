@@ -61,7 +61,7 @@ def calculate_percent_change(old_file, new_file):
             [0.5, 'white'],
             [1.0, 'blue']
         ],
-        title='Country-level Nextclade:Nextstrain Visitor Ratio',
+        title='Ratio of website visitors Nextclade : Nextstrain',
         color_continuous_midpoint=0,
         range_color=[-100, 100],
         hover_data={

@@ -28,23 +28,23 @@ def get_country_code(country_name):
     except Exception:
         return None
 
-def calculate_percent_change(old_file, new_file):
+def calculate_percent_change(nextstrain_file, nextclade_file):
     # Read CSV files
-    old_df = pd.read_csv(old_file)
-    new_df = pd.read_csv(new_file)
+    nextstrain_df = pd.read_csv(nextstrain_file)
+    nextclade_df = pd.read_csv(nextclade_file)
     
     # Merge dataframes on country name
-    merged_df = pd.merge(old_df, new_df, on='name', suffixes=('_old', '_new'))
+    merged_df = pd.merge(nextstrain_df, nextclade_df, on='name', suffixes=('_nextstrain', '_nextclade'))
     
     # Calculate percent change
-    merged_df['percent_change'] = ((merged_df['visitors_new'] - merged_df['visitors_old']) / merged_df['visitors_old']) * 100
+    merged_df['percent_change'] = ((merged_df['visitors_nextclade'] - merged_df['visitors_nextstrain']) / merged_df['visitors_nextstrain']) * 100
     
     # Add country codes
     merged_df['country_code'] = merged_df['name'].apply(get_country_code)
     
-    # Sort by visitors_new in descending order
-    result_df = merged_df[['name', 'country_code', 'visitors_old', 'visitors_new', 'percent_change']]
-    result_df = result_df.sort_values(by='visitors_new', ascending=False)
+    # Sort by visitors_nextclade in descending order
+    result_df = merged_df[['name', 'country_code', 'visitors_nextstrain', 'visitors_nextclade', 'percent_change']]
+    result_df = result_df.sort_values(by='visitors_nextclade', ascending=False)
     
     # Print results
     print("Country Visitor Percent Changes:")
@@ -66,8 +66,8 @@ def calculate_percent_change(old_file, new_file):
         range_color=[-100, 100],
         hover_data={
             'name': True, 
-            'visitors_old': ':.0f', 
-            'visitors_new': ':.0f', 
+            'visitors_nextstrain': ':.0f', 
+            'visitors_nextclade': ':.0f', 
             'percent_change': ':.2f%',
             'country_code': False
         }
@@ -88,19 +88,16 @@ def calculate_percent_change(old_file, new_file):
     )
     
     # Save the plot
-    fig.write_html('visitor_changes_map.html')
-    
-    # Save results to CSV
-    result_df.to_csv('visitor_percent_changes.csv', index=False)
+    fig.write_html('index.html')
     
     return result_df, fig
 
 # Specify file paths
-old_file = '/Users/victor/Downloads/lab-meeting/nextstrain-2024/countries.csv'
-new_file = '/Users/victor/Downloads/lab-meeting/nextclade-2024/countries.csv'
+nextstrain_file = 'nextstrain-2024/countries.csv'
+nextclade_file = 'nextclade-2024/countries.csv'
 
 # Run the comparison and generate map
-df, fig = calculate_percent_change(old_file, new_file)
+df, fig = calculate_percent_change(nextstrain_file, nextclade_file)
 
 # Save the plot to file
 fig.write_image('visitor_changes_map.png', scale=2)
